@@ -4,7 +4,7 @@ const zeroVector = { x: 0, y: 0, z: 0 };
 
 export const arenas: I.ArenaInfo[] = [
     {
-        weapon: 'WEAPON_RPG',
+        weapon: 'WEAPON_BATTLEAXE',
         spawns: {
             red: {
                 x: -202.11306762695312,
