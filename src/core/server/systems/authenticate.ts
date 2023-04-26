@@ -78,7 +78,7 @@ async function handleFinishAuthenticate(player: alt.Player, bearerToken: string)
 
     alt.setSyncedMeta('playerCount', getAuthenticatedPlayers().length);
 
-    alt.emit('broadcastMessage', `${name} has joined the server.`);
+    alt.emit('broadcastMessage', `${name} has joined team ${teamSelected}.`);
     alt.log(`${name} has joined the server.`);
 }
 

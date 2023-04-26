@@ -55,9 +55,29 @@ export function getTeam(player: alt.Player): 'red' | 'blue' {
  * @return {('red' | 'blue')}
  */
 export function getNextAvailableTeam(): 'red' | 'blue' {
-    return Object.values(Teams).filter((x) => x === 'red') > Object.values(Teams).filter((x) => x === 'blue')
-        ? 'blue'
-        : 'red';
+    let redTeam = [];
+    let blueTeam = [];
+
+    for (let player of alt.Player.all) {
+        const team = player.getStreamSyncedMeta('team');
+        if (typeof team === 'undefined') {
+            continue;
+        }
+
+        if (team === 'red') {
+            redTeam.push(player);
+        }
+
+        if (team === 'blue') {
+            blueTeam.push(player);
+        }
+    }
+
+    if (redTeam.length > blueTeam.length) {
+        return 'blue';
+    }
+
+    return 'red';
 }
 
 alt.on('playerDisconnect', removeFromTeam);
