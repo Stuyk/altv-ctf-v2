@@ -1,12 +1,6 @@
 import * as alt from 'alt-server';
 import { getTeam } from './teams';
 
-const aPos = new alt.Vector3({
-    x: 34.106048583984375,
-    y: 858.4243774414062,
-    z: 197.78826904296875,
-});
-
 let currentFlags: Flags;
 
 export class Flags {
@@ -72,7 +66,7 @@ export class Flags {
             this.resetRedFlag();
         }
 
-        // Handles removing the blue flag for a disconnected player
+        // Handles removinghe blue flag for a disconnected player
         if (this.blueFlagHolder && !this.blueFlagHolder.valid) {
             this.resetBlueFlag();
         }
@@ -123,16 +117,7 @@ export class Flags {
             return;
         }
 
-        if (this.redFlagHolder && this.redFlagHolder.id !== player.id) {
-            return;
-        }
-
-        this.resetBlueFlag();
-        console.log(`Red Scored!`);
-    }
-
-    tryScoringAsBlue(player: alt.Player) {
-        if (!this.isFlagAtBlue) {
+        if (!this.blueFlagHolder) {
             return;
         }
 
@@ -140,23 +125,61 @@ export class Flags {
             return;
         }
 
+        this.resetBlueFlag();
+    }
+
+    tryScoringAsBlue(player: alt.Player) {
+        if (!this.isFlagAtBlue) {
+            return;
+        }
+
+        if (!this.redFlagHolder) {
+            return;
+        }
+
+        if (this.redFlagHolder && this.redFlagHolder.id !== player.id) {
+            return;
+        }
+
         this.resetRedFlag();
-        console.log(`Blue Scored!`);
     }
 
     resetRedFlag() {
-        this.redFlagHolder = undefined;
         this.isFlagAtRed = true;
-        alt.setSyncedMeta('redFlagPos', this.redFlagPos);
+        this.redFlagHolder = undefined;
         alt.setSyncedMeta('redFlagHolder', undefined);
+        alt.setSyncedMeta('redFlagPos', this.redFlagPos);
     }
 
     resetBlueFlag() {
-        console.log('resetting blue flag...');
-
-        this.blueFlagHolder = undefined;
         this.isFlagAtBlue = true;
-        alt.setSyncedMeta('blueFlagPos', this.blueFlagPos);
+        this.blueFlagHolder = undefined;
         alt.setSyncedMeta('blueFlagHolder', undefined);
+        alt.setSyncedMeta('blueFlagPos', this.blueFlagPos);
+    }
+
+    dropAsFlagHolder(player: alt.Player) {
+        const team = getTeam(player);
+        if (typeof team === 'undefined') {
+            return;
+        }
+
+        if (team === 'red' && this.blueFlagHolder && this.blueFlagHolder.id === player.id) {
+            this.resetBlueFlag();
+        }
+
+        if (team === 'blue' && this.redFlagHolder && this.redFlagHolder.id === player.id) {
+            this.resetRedFlag();
+        }
     }
 }
+
+function handleDeath(player: alt.Player) {
+    if (!currentFlags) {
+        return;
+    }
+
+    currentFlags.dropAsFlagHolder(player);
+}
+
+alt.on('playerDeath', handleDeath);

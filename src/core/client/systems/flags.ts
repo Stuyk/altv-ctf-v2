@@ -21,30 +21,20 @@ function handleFlagState(key: string, value: alt.Vector3 | alt.Player) {
         return;
     }
 
-    if (value instanceof alt.Player) {
-        if (key === 'redFlagHolder') {
-            redHolder = value;
-        }
-
-        if (key === 'blueFlagHolder') {
-            blueHolder = value;
-        }
-
-        return;
+    if (key === 'redFlagHolder') {
+        redHolder = value as alt.Player;
     }
 
-    if (value instanceof alt.Vector3) {
-        const newPos = new alt.Vector3(value);
+    if (key === 'blueFlagHolder') {
+        blueHolder = value as alt.Player;
+    }
 
-        if (key === 'redFlagPos') {
-            redPos = newPos;
-        }
+    if (key === 'redFlagPos') {
+        redPos = new alt.Vector3(value as alt.IVector3);
+    }
 
-        if (key === 'blueFlagPos') {
-            bluePos = newPos;
-        }
-
-        return;
+    if (key === 'blueFlagPos') {
+        bluePos = new alt.Vector3(value as alt.IVector3);
     }
 }
 
