@@ -239,6 +239,12 @@ if (!currentArena) {
 alt.on('entityEnterColshape', onCollision);
 
 alt.on('playerDeath', async (player: alt.Player) => {
+    let name = player.getStreamSyncedMeta('name');
+    if (!name) {
+        name = 'Unknown';
+    }
+
+    alt.log(`${name} has died and is being respawned.`);
     await alt.Utils.waitFor(() => typeof currentArena !== 'undefined');
     currentArena.respawnPlayer(player);
 });
