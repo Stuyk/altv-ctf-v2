@@ -1,6 +1,7 @@
 node_modules
 altv-server
-resources
+resources/core
+resources/webviews
 .vscode
 *.dll
 *.exe

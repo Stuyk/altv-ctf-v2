@@ -6,7 +6,7 @@ import * as I from '../interfaces/index';
 import { Flags } from './flags';
 import { arenas } from '../config/arenas';
 
-const MAX_SCORE = 2;
+const MAX_SCORE = 9;
 const UID_BLUE_GOAL = 'goal-blue-uid';
 const UID_RED_GOAL = 'goal-red-uid';
 
