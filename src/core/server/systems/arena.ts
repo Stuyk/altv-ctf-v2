@@ -250,14 +250,11 @@ alt.on('playerDeath', async (player: alt.Player) => {
 });
 
 alt.setInterval(() => {
-    alt.Player.all.forEach((player) => {
-        if (!player.hasStreamSyncedMeta('authenticated')) {
-            return;
-        }
-
+    const authedPlayers = getAuthenticatedPlayers();
+    authedPlayers.forEach((player) => {
         if (player.pos.z <= 0) {
             player.pos = new alt.Vector3(player.pos).add(0, 0, 99);
-            player.health = 99;
+            player.health = 0;
         }
     });
 }, 1000);
