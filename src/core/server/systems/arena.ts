@@ -248,3 +248,16 @@ alt.on('playerDeath', async (player: alt.Player) => {
     await alt.Utils.waitFor(() => typeof currentArena !== 'undefined');
     currentArena.respawnPlayer(player);
 });
+
+alt.setInterval(() => {
+    alt.Player.all.forEach((player) => {
+        if (!player.hasStreamSyncedMeta('authenticated')) {
+            return;
+        }
+
+        if (player.pos.z <= 0) {
+            player.pos = new alt.Vector3(player.pos).add(0, 0, 99);
+            player.health = 99;
+        }
+    });
+}, 1000);
