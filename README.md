@@ -1,11 +1,10 @@
-
+# alt:V CTF v2
 
 ## Install the Repository
 
 Use the command below in any terminal, command prompt, etc.
 
 ```sh
-cd altv-typescript-vue
 npm install
 ```
 
