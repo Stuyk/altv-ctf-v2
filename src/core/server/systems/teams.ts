@@ -1,0 +1,63 @@
+import * as alt from 'alt-server';
+import { setClothes } from './clothes';
+import { Events } from '../../shared/events';
+import { getArena } from './arena';
+
+const Teams: { [id: number]: 'red' | 'blue' } = {};
+
+/**
+ * Add a player to a team.
+ *
+ * @export
+ * @param {alt.Player} player
+ * @param {('red' | 'blue')} team
+ */
+export async function addToTeam(player: alt.Player, team: 'red' | 'blue') {
+    Teams[player.id] = team;
+    setClothes(player, team);
+    player.setStreamSyncedMeta('team', team);
+    player.emitRaw(Events.toClient.applyPlayerChanges);
+}
+
+/**
+ * Remove a player from a team.
+ *
+ * @export
+ * @param {(alt.Player | number)} player
+ */
+export function removeFromTeam(player: alt.Player | number) {
+    if (player instanceof alt.Player) {
+        player = player.id;
+    }
+
+    if (typeof player === 'undefined') {
+        return;
+    }
+
+    delete Teams[player];
+}
+
+/**
+ * Get the team of the player.
+ *
+ * @export
+ * @param {alt.Player} player
+ * @return {('red' | 'blue')}
+ */
+export function getTeam(player: alt.Player): 'red' | 'blue' {
+    return player.getStreamSyncedMeta('team');
+}
+
+/**
+ * Find an available team with a lower player count.
+ *
+ * @export
+ * @return {('red' | 'blue')}
+ */
+export function getNextAvailableTeam(): 'red' | 'blue' {
+    return Object.values(Teams).filter((x) => x === 'red') > Object.values(Teams).filter((x) => x === 'blue')
+        ? 'blue'
+        : 'red';
+}
+
+alt.on('playerDisconnect', removeFromTeam);
