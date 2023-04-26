@@ -1,3 +1,4 @@
+import './audio/index';
 import './authenticate';
 import './flags';
 import './nametags';

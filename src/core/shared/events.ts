@@ -7,5 +7,6 @@ export const Events = {
         authenticate: 'client:event:authenticate',
         startTickEvents: 'client:event:start:ticks',
         applyPlayerChanges: 'client:event:apply:player:changes',
+        playAudio: 'client:event:play:audio',
     },
 };

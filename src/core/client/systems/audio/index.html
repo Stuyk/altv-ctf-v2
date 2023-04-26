@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head> </head>
+    <body>
+        <script>
+            function playAudio(path) {
+                console.log(path);
+                let audio = new Audio(path);
+                audio.loop = false;
+                audio.volume = 0.5;
+                audio.play();
+            }
+
+            if ('alt' in window) {
+                alt.on('play:Audio', playAudio);
+            }
+        </script>
+    </body>
+</html>

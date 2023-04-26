@@ -1,5 +1,6 @@
 import * as alt from 'alt-server';
 import { getTeam } from './teams';
+import { playAudio } from './audio';
 
 let currentFlags: Flags;
 
@@ -99,6 +100,7 @@ export class Flags {
         this.blueFlagHolder = player;
         alt.setSyncedMeta('blueFlagHolder', player);
         alt.setSyncedMeta('blueFlagPos', player.pos);
+        playAudio('blue-flag-taken.ogg');
     }
 
     tryGrabbingAsBlue(player: alt.Player) {
@@ -110,6 +112,7 @@ export class Flags {
         this.redFlagHolder = player;
         alt.setSyncedMeta('redFlagHolder', player);
         alt.setSyncedMeta('redFlagPos', player.pos);
+        playAudio('red-flag-taken.ogg');
     }
 
     tryScoringAsRed(player: alt.Player): boolean {
@@ -125,6 +128,7 @@ export class Flags {
             return false;
         }
 
+        playAudio('red-team-scored.ogg');
         this.resetBlueFlag();
         return true;
     }
@@ -142,6 +146,7 @@ export class Flags {
             return false;
         }
 
+        playAudio('blue-team-scored.ogg');
         this.resetRedFlag();
         return true;
     }
@@ -167,10 +172,12 @@ export class Flags {
         }
 
         if (team === 'red' && this.blueFlagHolder && this.blueFlagHolder.id === player.id) {
+            playAudio('blue-flag-returned.ogg');
             this.resetBlueFlag();
         }
 
         if (team === 'blue' && this.redFlagHolder && this.redFlagHolder.id === player.id) {
+            playAudio('red-flag-returned.ogg');
             this.resetRedFlag();
         }
     }
