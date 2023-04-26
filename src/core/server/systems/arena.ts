@@ -251,12 +251,16 @@ alt.on('playerDeath', async (player: alt.Player) => {
 
 alt.setInterval(() => {
     const authedPlayers = getAuthenticatedPlayers();
-    authedPlayers.forEach((player) => {
+    alt.log(`Authed Players: ${authedPlayers.length}`);
+
+    for (let player of authedPlayers) {
         alt.log(`Checking ${player.name}`);
 
-        if (player.pos.z <= 0) {
-            player.pos = new alt.Vector3(player.pos).add(0, 0, 99);
-            player.health = 0;
+        if (player.pos.z >= 0) {
+            continue;
         }
-    });
-}, 1000);
+
+        player.pos = new alt.Vector3(player.pos).add(0, 0, 99);
+        player.health = 0;
+    }
+}, 5000);
