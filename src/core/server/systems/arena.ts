@@ -7,7 +7,7 @@ import { Flags } from './flags';
 import { arenas } from '../config/arenas';
 import { getPositionAround } from '../../shared/vector';
 
-const MAX_SCORE = 9;
+const MAX_SCORE = 3;
 const UID_BLUE_GOAL = 'goal-blue-uid';
 const UID_RED_GOAL = 'goal-red-uid';
 
@@ -15,6 +15,7 @@ type GoalShape = alt.Checkpoint & { uid: string };
 type BoundsShape = alt.ColshapePolygon & { uid: string };
 
 let currentArena: Arena;
+let arenaIndex = 0;
 
 export class Arena {
     private arenaInfo: I.ArenaInfo;
@@ -175,7 +176,12 @@ export class Arena {
         }
 
         if (this.blueScore >= MAX_SCORE || this.redScore >= MAX_SCORE) {
-            new Arena(arenas[0]);
+            arenaIndex += 1;
+            if (arenaIndex >= arenas.length) {
+                arenaIndex = 0;
+            }
+
+            new Arena(arenas[arenaIndex]);
         }
     }
 
@@ -233,7 +239,7 @@ export function onCollision(colshape: GoalShape | BoundsShape, entity: alt.Playe
 }
 
 if (!currentArena) {
-    currentArena = new Arena(arenas[0]);
+    currentArena = new Arena(arenas[arenaIndex]);
 }
 
 alt.on('entityEnterColshape', onCollision);
