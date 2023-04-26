@@ -1,10 +1,11 @@
 import * as alt from 'alt-server';
 import { getAuthenticatedPlayers } from '../utility/players';
 import { shuffle, split } from '../../shared/array';
-import { addToTeam } from './teams';
+import { addToTeam, getTeam } from './teams';
 import * as I from '../interfaces/index';
 import { Flags } from './flags';
 import { arenas } from '../config/arenas';
+import { getPositionAround } from '../../shared/vector';
 
 const MAX_SCORE = 9;
 const UID_BLUE_GOAL = 'goal-blue-uid';
@@ -118,13 +119,15 @@ export class Arena {
     }
 
     async spawnRed(player: alt.Player) {
-        player.spawn(this.arenaInfo.spawns.red);
+        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.red, 10));
+        player.spawn(newPos);
         player.removeAllWeapons();
         player.giveWeapon(this.arenaInfo.weapon, 9999, true);
     }
 
     async spawnBlue(player: alt.Player) {
-        player.spawn(this.arenaInfo.spawns.blue);
+        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.blue, 10));
+        player.spawn(newPos);
         player.removeAllWeapons();
         player.giveWeapon(this.arenaInfo.weapon, 9999, true);
     }
@@ -175,6 +178,18 @@ export class Arena {
             new Arena(arenas[0]);
         }
     }
+
+    respawnPlayer(player: alt.Player) {
+        const team = getTeam(player);
+
+        if (team === 'red') {
+            this.spawnRed(player);
+        }
+
+        if (team === 'blue') {
+            this.spawnBlue(player);
+        }
+    }
 }
 
 export function getArena(): Arena {
@@ -222,3 +237,8 @@ if (!currentArena) {
 }
 
 alt.on('entityEnterColshape', onCollision);
+
+alt.on('playerDeath', async (player: alt.Player) => {
+    await alt.Utils.waitFor(() => typeof currentArena !== 'undefined');
+    currentArena.respawnPlayer(player);
+});

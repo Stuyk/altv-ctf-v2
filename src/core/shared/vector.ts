@@ -311,3 +311,11 @@ export function getClosestOfType<T = { pos: alt.IVector3 }>(
 
     return lastClosest;
 }
+
+export function getPositionAround(pos: alt.IVector3, range: number) {
+    return {
+        x: pos.x + Math.random() * (range * 2) - range,
+        y: pos.y + Math.random() * (range * 2) - range,
+        z: pos.z,
+    };
+}
