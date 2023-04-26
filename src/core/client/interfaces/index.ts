@@ -10,5 +10,7 @@ declare module 'alt-client' {
 
         redScore: number;
         blueScore: number;
+
+        playerCount: number;
     }
 }

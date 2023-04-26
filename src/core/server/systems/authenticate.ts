@@ -2,6 +2,7 @@ import * as alt from 'alt-server';
 import { Events } from '../../shared/events';
 import { addToTeam, getNextAvailableTeam } from './teams';
 import { getArena } from './arena';
+import { getAuthenticatedPlayers } from '../utility/players';
 
 let kickPlayerIn: { [id: number]: number } = {};
 
@@ -75,6 +76,8 @@ async function handleFinishAuthenticate(player: alt.Player, bearerToken: string)
 
     delete kickPlayerIn[player.id];
 
+    alt.setSyncedMeta('playerCount', getAuthenticatedPlayers().length);
+
     alt.emit('broadcastMessage', `${name} has joined the server.`);
     alt.log(`${name} has joined the server.`);
 }
@@ -87,4 +90,6 @@ alt.on('playerDisconnect', (player: alt.Player) => {
         const name = player.getStreamSyncedMeta('name');
         alt.emit('broadcastMessage', `${name} has left the server.`);
     } catch (err) {}
+
+    alt.setSyncedMeta('playerCount', getAuthenticatedPlayers().length);
 });

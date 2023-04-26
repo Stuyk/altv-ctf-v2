@@ -10,6 +10,8 @@ declare module 'alt-server' {
 
         redScore: number;
         blueScore: number;
+
+        playerCount: number;
     }
 }
 
