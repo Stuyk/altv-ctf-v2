@@ -74,6 +74,8 @@ async function handleFinishAuthenticate(player: alt.Player, bearerToken: string)
     }
 
     delete kickPlayerIn[player.id];
+
+    alt.emit('authenticated', name);
     alt.log(`${name} has joined the server.`);
 }
 
