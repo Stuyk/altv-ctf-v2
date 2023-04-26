@@ -6,6 +6,7 @@ import * as I from '../interfaces/index';
 import { Flags } from './flags';
 import { arenas } from '../config/arenas';
 
+const MAX_SCORE = 2;
 const UID_BLUE_GOAL = 'goal-blue-uid';
 const UID_RED_GOAL = 'goal-red-uid';
 
@@ -168,6 +169,10 @@ export class Arena {
         if (team === 'blue') {
             this.blueScore += 1;
             alt.setSyncedMeta('blueScore', this.blueScore);
+        }
+
+        if (this.blueScore >= MAX_SCORE || this.redScore >= MAX_SCORE) {
+            new Arena(arenas[0]);
         }
     }
 }
