@@ -20,14 +20,14 @@ function tick() {
     drawText2D({
         text: `Players ${players}`,
         color: new alt.RGBA(255, 255, 255, 255),
-        pos: new alt.Vector2({ x: 0.98, y: 0.02 }),
+        pos: new alt.Vector2({ x: 0.85, y: 0.02 }),
         scale: 0.5,
     });
 
     drawText2D({
         text: `~b~${blueScore} ~w~| ~r~${redScore}`,
         color: new alt.RGBA(255, 255, 255, 255),
-        pos: new alt.Vector2({ x: 0.5, y: 0.05 }),
+        pos: new alt.Vector2({ x: 0.5, y: 0.02 }),
         scale: 0.9,
     });
 }
