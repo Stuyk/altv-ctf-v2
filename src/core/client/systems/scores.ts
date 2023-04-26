@@ -18,9 +18,9 @@ function tick() {
     }
 
     drawText2D({
-        text: `Player Count: ${players}`,
+        text: `Players ${players}`,
         color: new alt.RGBA(255, 255, 255, 255),
-        pos: new alt.Vector2({ x: 0.5, y: 0.02 }),
+        pos: new alt.Vector2({ x: 0.98, y: 0.02 }),
         scale: 0.5,
     });
 
