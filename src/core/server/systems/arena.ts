@@ -245,6 +245,7 @@ alt.on('playerDeath', async (player: alt.Player) => {
     }
 
     alt.log(`${name} has died and is being respawned.`);
+    alt.emit('broadcastMessage', `${player.getStreamSyncedMeta('name')} died.`);
     await alt.Utils.waitFor(() => typeof currentArena !== 'undefined');
     currentArena.respawnPlayer(player);
 });
@@ -256,7 +257,7 @@ alt.setInterval(() => {
             continue;
         }
 
-        player.pos = new alt.Vector3(player.pos).add(0, 0, 99);
-        player.health = 0;
+        currentArena.respawnPlayer(player);
+        alt.emit('broadcastMessage', `${player.getStreamSyncedMeta('name')} jumped in the water like a dipshit.`);
     }
 }, 5000);

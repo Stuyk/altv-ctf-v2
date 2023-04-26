@@ -75,9 +75,16 @@ async function handleFinishAuthenticate(player: alt.Player, bearerToken: string)
 
     delete kickPlayerIn[player.id];
 
-    alt.emit('authenticated', name);
+    alt.emit('broadcastMessage', `${name} has joined the server.`);
     alt.log(`${name} has joined the server.`);
 }
 
 alt.on('playerConnect', handleAuthenticate);
 alt.onClient(Events.toServer.finishAuthenticate, handleFinishAuthenticate);
+
+alt.on('playerDisconnect', (player: alt.Player) => {
+    try {
+        const name = player.getStreamSyncedMeta('name');
+        alt.emit('broadcastMessage', `${name} has left the server.`);
+    } catch (err) {}
+});
