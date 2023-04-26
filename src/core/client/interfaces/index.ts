@@ -7,5 +7,8 @@ declare module 'alt-client' {
 
         redFlagPos: alt.IVector3;
         blueFlagPos: alt.IVector3;
+
+        redScore: number;
+        blueScore: number;
     }
 }

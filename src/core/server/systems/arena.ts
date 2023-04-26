@@ -27,6 +27,9 @@ export class Arena {
 
     private flags: Flags;
 
+    private redScore = 0;
+    private blueScore = 0;
+
     /**
      * Creates an instance of an Arena.
      *
@@ -64,6 +67,9 @@ export class Arena {
         // Create new flag system, automatically cleans old system
         this.flags = new Flags(new alt.Vector3(this.arenaInfo.flags.red), new alt.Vector3(this.arenaInfo.flags.blue));
         this.buildGoals();
+
+        alt.setSyncedMeta('blueScore', this.blueScore);
+        alt.setSyncedMeta('redScore', this.redScore);
 
         currentArena = this;
     }
@@ -152,6 +158,18 @@ export class Arena {
     getFlags() {
         return this.flags;
     }
+
+    incrementScore(team: 'red' | 'blue') {
+        if (team === 'red') {
+            this.redScore += 1;
+            alt.setSyncedMeta('redScore', this.redScore);
+        }
+
+        if (team === 'blue') {
+            this.blueScore += 1;
+            alt.setSyncedMeta('blueScore', this.blueScore);
+        }
+    }
 }
 
 export function getArena(): Arena {
@@ -169,22 +187,27 @@ export function onCollision(colshape: GoalShape | BoundsShape, entity: alt.Playe
 
     const flags = currentArena.getFlags();
     if (colshape.uid === UID_BLUE_GOAL) {
-        if (entity.getStreamSyncedMeta('team') === 'blue') {
-            flags.tryScoringAsBlue(entity);
-        } else {
+        if (entity.getStreamSyncedMeta('team') === 'red') {
             flags.tryGrabbingAsRed(entity);
         }
 
+        const didScore = flags.tryScoringAsBlue(entity);
+        if (didScore) {
+            currentArena.incrementScore('blue');
+        }
         return;
     }
 
     if (colshape.uid === UID_RED_GOAL) {
-        if (entity.getStreamSyncedMeta('team') === 'red') {
-            flags.tryScoringAsRed(entity);
-        } else {
+        if (entity.getStreamSyncedMeta('team') === 'blue') {
             flags.tryGrabbingAsBlue(entity);
+            return;
         }
 
+        const didScore = flags.tryScoringAsRed(entity);
+        if (didScore) {
+            currentArena.incrementScore('red');
+        }
         return;
     }
 }

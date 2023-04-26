@@ -7,6 +7,9 @@ declare module 'alt-server' {
 
         redFlagPos: alt.IVector3;
         blueFlagPos: alt.IVector3;
+
+        redScore: number;
+        blueScore: number;
     }
 }
 

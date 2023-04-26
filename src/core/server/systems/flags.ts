@@ -112,36 +112,38 @@ export class Flags {
         alt.setSyncedMeta('redFlagPos', player.pos);
     }
 
-    tryScoringAsRed(player: alt.Player) {
+    tryScoringAsRed(player: alt.Player): boolean {
         if (!this.isFlagAtRed) {
-            return;
+            return false;
         }
 
         if (!this.blueFlagHolder) {
-            return;
+            return false;
         }
 
         if (this.blueFlagHolder && this.blueFlagHolder.id !== player.id) {
-            return;
+            return false;
         }
 
         this.resetBlueFlag();
+        return true;
     }
 
-    tryScoringAsBlue(player: alt.Player) {
+    tryScoringAsBlue(player: alt.Player): boolean {
         if (!this.isFlagAtBlue) {
-            return;
+            return false;
         }
 
         if (!this.redFlagHolder) {
-            return;
+            return false;
         }
 
         if (this.redFlagHolder && this.redFlagHolder.id !== player.id) {
-            return;
+            return false;
         }
 
         this.resetRedFlag();
+        return true;
     }
 
     resetRedFlag() {
