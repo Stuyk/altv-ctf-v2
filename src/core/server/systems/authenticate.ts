@@ -3,7 +3,24 @@ import { Events } from '../../shared/events';
 import { addToTeam, getNextAvailableTeam } from './teams';
 import { getArena } from './arena';
 
+let kickPlayerIn: { [id: number]: number } = {};
+
 function handleAuthenticate(player: alt.Player) {
+    Object.keys(kickPlayerIn).forEach((id) => {
+        if (kickPlayerIn[id] > Date.now()) {
+            return;
+        }
+
+        const somePlayer = alt.Player.all.find((x) => x.id === parseInt(id));
+        if (!somePlayer) {
+            delete kickPlayerIn[id];
+            return;
+        }
+
+        somePlayer.kick('Failed to Login');
+    });
+
+    kickPlayerIn[player.id] = Date.now() + 60000 * 3;
     player.emitRaw(Events.toClient.authenticate);
 }
 
@@ -56,6 +73,7 @@ async function handleFinishAuthenticate(player: alt.Player, bearerToken: string)
         currentArena.spawnBlue(player);
     }
 
+    delete kickPlayerIn[player.id];
     alt.log(`${name} has joined the server.`);
 }
 
