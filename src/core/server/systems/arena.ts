@@ -120,14 +120,14 @@ export class Arena {
     }
 
     async spawnRed(player: alt.Player) {
-        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.red, 10));
+        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.red, 5));
         player.spawn(newPos);
         player.removeAllWeapons();
         player.giveWeapon(this.arenaInfo.weapon, 9999, true);
     }
 
     async spawnBlue(player: alt.Player) {
-        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.blue, 10));
+        const newPos = new alt.Vector3(getPositionAround(this.arenaInfo.spawns.blue, 5));
         player.spawn(newPos);
         player.removeAllWeapons();
         player.giveWeapon(this.arenaInfo.weapon, 9999, true);
@@ -186,6 +186,11 @@ export class Arena {
     }
 
     respawnPlayer(player: alt.Player) {
+        const currentFlags = this.getFlags();
+        if (currentFlags) {
+            currentFlags.dropAsFlagHolder(player);
+        }
+
         const team = getTeam(player);
 
         if (team === 'red') {
@@ -244,14 +249,19 @@ if (!currentArena) {
 
 alt.on('entityEnterColshape', onCollision);
 
-alt.on('playerDeath', async (player: alt.Player) => {
+alt.on('playerDeath', async (player: alt.Player, killer: alt.Player) => {
     let name = player.getStreamSyncedMeta('name');
     if (!name) {
         name = 'Unknown';
     }
 
+    let killerName = 'Unknown';
+    if (killer && killer.hasStreamSyncedMeta('name')) {
+        killerName = killer.getStreamSyncedMeta('name');
+    }
+
     alt.log(`${name} has died and is being respawned.`);
-    alt.emit('broadcastMessage', `${player.getStreamSyncedMeta('name')} died.`);
+    alt.emit('broadcastMessage', `{FFFF00}${player.getStreamSyncedMeta('name')} was killed by ${killerName}`);
     await alt.Utils.waitFor(() => typeof currentArena !== 'undefined');
     currentArena.respawnPlayer(player);
 });
@@ -264,6 +274,6 @@ alt.setInterval(() => {
         }
 
         currentArena.respawnPlayer(player);
-        alt.emit('broadcastMessage', `${player.getStreamSyncedMeta('name')} jumped in the water like a dipshit.`);
+        alt.emit('broadcastMessage', `${player.getStreamSyncedMeta('name')} water logged themselves.`);
     }
-}, 5000);
+}, 1000);

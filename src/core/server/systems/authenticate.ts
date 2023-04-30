@@ -88,7 +88,10 @@ alt.onClient(Events.toServer.finishAuthenticate, handleFinishAuthenticate);
 alt.on('playerDisconnect', (player: alt.Player) => {
     try {
         const name = player.getStreamSyncedMeta('name');
-        alt.emit('broadcastMessage', `${name} has left the server.`);
+        if (name) {
+            alt.log(`${name} has left the server.`);
+            alt.emit('broadcastMessage', `${name} has left the server.`);
+        }
     } catch (err) {}
 
     alt.setSyncedMeta('playerCount', getAuthenticatedPlayers().length);

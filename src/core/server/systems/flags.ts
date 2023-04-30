@@ -182,13 +182,3 @@ export class Flags {
         }
     }
 }
-
-function handleDeath(player: alt.Player) {
-    if (!currentFlags) {
-        return;
-    }
-
-    currentFlags.dropAsFlagHolder(player);
-}
-
-alt.on('playerDeath', handleDeath);
